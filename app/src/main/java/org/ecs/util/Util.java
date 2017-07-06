@@ -5,7 +5,7 @@ import android.graphics.Matrix;
 public class Util {
     public static void prepareMatrix(Matrix matrix, boolean mirror, int displayOrientation,
             int viewWidth, int viewHeight) {
-        // Need mirror for front camera.
+        // Need mirror for front camera. 前Camera需要将原图像素点x坐标取反
         matrix.setScale(mirror ? -1 : 1, 1);
         // This is the value for android.hardware.Camera.setDisplayOrientation.
         matrix.postRotate(displayOrientation);

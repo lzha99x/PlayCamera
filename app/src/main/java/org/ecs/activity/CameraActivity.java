@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 
 public class CameraActivity extends Activity{
 	private static final String TAG = "CameraActivity";
+	private static final int TASKS_DELAY_MSEC = 2500;
     private final boolean LOGV = true;
 	CameraSurfaceView surfaceView = null;
 	ImageButton shutterBtn;
@@ -99,7 +100,7 @@ public class CameraActivity extends Activity{
 			case R.id.btn_switch:
                 switchBtn.setVisibility(View.INVISIBLE);
 				switchCamera();
-                mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_SWITCH_BUTTON,2000);
+                mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_SWITCH_BUTTON,TASKS_DELAY_MSEC);
 				break;
 			default:break;
 			}
@@ -116,8 +117,8 @@ public class CameraActivity extends Activity{
                 Log.d(TAG, "handleMessage: UPDATE_FACE_RECT");
                 Face[] faces = (Face[]) msg.obj;
 				faceView.setFaces(faces);
-                stopGoogleFaceDetect();
-                mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_TAKE_PICTURE, 1500);
+                //stopGoogleFaceDetect();
+                //mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_TAKE_PICTURE, TASKS_DELAY_MSEC);
 				break;
 			case EventUtil.CAMERA_HAS_STARTED_PREVIEW:
 				startGoogleFaceDetect();
@@ -137,7 +138,7 @@ public class CameraActivity extends Activity{
 	private void takePicture(){
         mMainHandler.removeMessages(EventUtil.CAMERA_HAS_STARTED_PREVIEW);
 		CameraInterface.getInstance().doTakePicture();
-		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, 5500);
+		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, TASKS_DELAY_MSEC);
 	}
 	private void switchCamera(){
 		stopGoogleFaceDetect();
@@ -145,7 +146,7 @@ public class CameraActivity extends Activity{
 		CameraInterface.getInstance().doStopCamera();
 		CameraInterface.getInstance().doOpenCamera(null, newId);
 		CameraInterface.getInstance().doStartPreview(surfaceView.getSurfaceHolder(), previewRate);
-		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, 5500);
+		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, TASKS_DELAY_MSEC);
 //		startGoogleFaceDetect();
 
 	}
