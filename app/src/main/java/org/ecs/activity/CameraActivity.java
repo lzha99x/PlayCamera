@@ -47,7 +47,7 @@ public class CameraActivity extends Activity{
 		shutterBtn.setOnClickListener(new BtnListeners());
 		switchBtn.setOnClickListener(new BtnListeners());
 		//mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, 1500);
-	}
+    }
 
     @Override
     protected void onResume() {
@@ -83,6 +83,7 @@ public class CameraActivity extends Activity{
 		params.width = p.x;
 		params.height = p.y;
 		previewRate = DisplayUtil.getScreenRate(this);
+        surfaceView.setMainActivity(this);
 		surfaceView.setLayoutParams(params);
 
 
@@ -145,7 +146,7 @@ public class CameraActivity extends Activity{
 		int newId = (CameraInterface.getInstance().getCameraId() + 1)%2;
 		CameraInterface.getInstance().doStopCamera();
 		CameraInterface.getInstance().doOpenCamera(null, newId);
-		CameraInterface.getInstance().doStartPreview(surfaceView.getSurfaceHolder(), previewRate);
+		CameraInterface.getInstance().doStartPreview(this,surfaceView.getSurfaceHolder(), previewRate);
 		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, TASKS_DELAY_MSEC);
 //		startGoogleFaceDetect();
 

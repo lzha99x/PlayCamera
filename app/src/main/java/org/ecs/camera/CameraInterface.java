@@ -7,9 +7,10 @@ import org.ecs.util.CamParaUtil;
 import org.ecs.util.FileUtil;
 import org.ecs.util.ImageUtil;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -19,6 +20,7 @@ import android.view.SurfaceHolder;
 
 public class CameraInterface {
 	private static final String TAG = "CameraInterface";
+	private static final boolean LOGV = true;
 	private Camera mCamera;
 	private Camera.Parameters mParams;
 	private boolean isPreviewing = false;
@@ -55,8 +57,8 @@ public class CameraInterface {
 	 * @param holder
 	 * @param previewRate
 	 */
-	public void doStartPreview(SurfaceHolder holder, float previewRate){
-		Log.i(TAG, "doStartPreview...");
+	public void doStartPreview(Activity currentActivity, SurfaceHolder holder, float previewRate){
+		Log.i(TAG, "doStartPreview... previewRate = " + previewRate);
 		if(isPreviewing){
 			mCamera.stopPreview();
 			return;
@@ -64,15 +66,18 @@ public class CameraInterface {
 		if(mCamera != null){
 
 			mParams = mCamera.getParameters();
-			mParams.setPictureFormat(PixelFormat.JPEG);
+			mParams.setPictureFormat(ImageFormat.JPEG);
 			CamParaUtil.getInstance().printSupportPictureSize(mParams);
 			CamParaUtil.getInstance().printSupportPreviewSize(mParams);
-			//
+			// Set pictureSize
 			Size pictureSize = CamParaUtil.getInstance().getPropPictureSize(
 					mParams.getSupportedPictureSizes(),previewRate, 800);
 			mParams.setPictureSize(pictureSize.width, pictureSize.height);
-			Size previewSize = CamParaUtil.getInstance().getPropPreviewSize(
-					mParams.getSupportedPreviewSizes(), previewRate, 800);
+			// Set previewSize
+			Size previewSize = CamParaUtil.getInstance().getOptimalPreviewSize(currentActivity,
+					mParams.getSupportedPictureSizes(),(double)previewRate);
+			if (LOGV) Log.d(TAG, "w = " + previewSize.width+ "h = " + previewSize.height);
+
 			mParams.setPreviewSize(previewSize.width, previewSize.height);
 
 			mCamera.setDisplayOrientation(0);
