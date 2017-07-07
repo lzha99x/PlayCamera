@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/org/ecs/ui/FaceView.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/org/ecs/util/CamParaUtil.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/org/ecs/util/DisplayUtil.java" charset="GB2312" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/org/ecs/util/FileUtil.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/org/ecs/util/ImageUtil.java" charset="GB2312" />
   </component>
 </project>

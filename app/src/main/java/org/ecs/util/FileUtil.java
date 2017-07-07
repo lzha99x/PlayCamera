@@ -4,6 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -14,6 +17,7 @@ public class FileUtil {
 	private static final File parentPath = Environment.getExternalStorageDirectory();
 	private static   String storagePath = "";
 	private static final String DST_FOLDER_NAME = "PlayCamera";
+    private static ImageFileName sImageFileName;
 
 	/**初始化保存路径
 	 * @return
@@ -26,6 +30,7 @@ public class FileUtil {
 				f.mkdir();
 			}
 		}
+        sImageFileName = new ImageFileName("yyyyMMdd_HHmmss");
 		return storagePath;
 	}
 
@@ -36,7 +41,7 @@ public class FileUtil {
 
 		String path = initPath();
 		long dataTake = System.currentTimeMillis();
-		String jpegName = path + "/" + dataTake +".jpg";
+		String jpegName = path + "/" + createJpegName(dataTake) +".jpg";
 		Log.i(TAG, "saveBitmap:jpegName = " + jpegName);
 		try {
 			FileOutputStream fout = new FileOutputStream(jpegName);
@@ -53,5 +58,34 @@ public class FileUtil {
 
 	}
 
+	private static String createJpegName(long dateTaken) {
+        synchronized (sImageFileName) {
+            return sImageFileName.generateName(dateTaken);
+        }
+	}
 
+	private static class ImageFileName {
+		private final SimpleDateFormat mFormat;
+
+        private long mLastDate;
+
+        private int mSameSecondCount;
+        ImageFileName(String format) {
+			mFormat = new SimpleDateFormat(format, Locale.getDefault());
+		}
+
+		String generateName(long dateTaken) {
+			Date date = new Date(dateTaken);
+			String result = mFormat.format(date);
+
+            if (dateTaken / 1000 == mLastDate / 1000) {
+                mSameSecondCount++;
+                result += "_" + mSameSecondCount;
+            } else {
+                mLastDate = dateTaken;
+                mSameSecondCount = 0;
+            }
+			return result;
+		}
+	}
 }
