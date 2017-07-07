@@ -24,7 +24,7 @@ public class CameraInterface {
 	private Camera mCamera;
 	private Camera.Parameters mParams;
 	private boolean isPreviewing = false;
-	private float mPreviwRate = -1f;
+	private double mPreviwRate = -1d;
 	private int mCameraId = -1;
 	private boolean isGoolgeFaceDetectOn = false;
 	private static CameraInterface mCameraInterface;
@@ -57,7 +57,7 @@ public class CameraInterface {
 	 * @param holder
 	 * @param previewRate
 	 */
-	public void doStartPreview(Activity currentActivity, SurfaceHolder holder, float previewRate){
+	public void doStartPreview(Activity currentActivity, SurfaceHolder holder, double previewRate){
 		Log.i(TAG, "doStartPreview... previewRate = " + previewRate);
 		if(isPreviewing){
 			mCamera.stopPreview();
@@ -70,16 +70,17 @@ public class CameraInterface {
 			CamParaUtil.getInstance().printSupportPictureSize(mParams);
 			CamParaUtil.getInstance().printSupportPreviewSize(mParams);
 			// Set pictureSize
-			Size pictureSize = CamParaUtil.getInstance().getPropPictureSize(
-					mParams.getSupportedPictureSizes(),previewRate, 800);
+			Size pictureSize = CamParaUtil.getInstance().getOptimalPictureSize(
+					mParams.getSupportedPictureSizes(),previewRate);
+			if (LOGV) Log.d(TAG, "pictureSize  w = " + pictureSize.width + " h = " + pictureSize.height);
 			mParams.setPictureSize(pictureSize.width, pictureSize.height);
 			// Set previewSize
 			Size previewSize = CamParaUtil.getInstance().getOptimalPreviewSize(currentActivity,
-					mParams.getSupportedPreviewSizes(),(double)previewRate);
-			if (LOGV) Log.d(TAG, "w = " + previewSize.width+ "h = " + previewSize.height);
+					mParams.getSupportedPreviewSizes(),previewRate);
+			if (LOGV) Log.d(TAG, "w = " + previewSize.width+ " h = " + previewSize.height);
 
 			mParams.setPreviewSize(previewSize.width, previewSize.height);
-
+			// 设置屏幕方向,当前横屏
 			mCamera.setDisplayOrientation(0);
 
 			CamParaUtil.getInstance().printSupportFocusMode(mParams);

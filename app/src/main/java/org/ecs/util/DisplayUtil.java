@@ -48,7 +48,7 @@ public class DisplayUtil {
 	 * @param context
 	 * @return
 	 */
-	public static float getScreenRate(Context context){
+	public static double getScreenRate(Context context){
 		Point P = getScreenMetrics(context);
 		float H = P.y;
 		float W = P.x;

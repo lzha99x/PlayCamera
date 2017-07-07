@@ -26,6 +26,30 @@ public class CamParaUtil {
 			return myCamPara;
 		}
 	}
+    /*******************************************************************************************/
+    public Size getOptimalPictureSize(List<Camera.Size> sizes, double targetRatio) {
+        Size optimalSize = null;
+        final double ASPECT_TOLERANCE = 0.001;
+        if (sizes == null) return null;
+
+        for (Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (optimalSize == null || size.width > optimalSize.width) {
+                optimalSize = size;
+            }
+        }
+
+        if (optimalSize == null) {
+            for (Size size : sizes) {
+                if (optimalSize == null || size.width > optimalSize.width) {
+                    optimalSize = size;
+                }
+            }
+        }
+        return optimalSize;
+    }
+    /*******************************************************************************************/
 /*******************************************************************************************/
     private Point getDefaultDisplaySize(Activity activity, Point size) {
         activity.getWindowManager().getDefaultDisplay().getSize(size);

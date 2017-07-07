@@ -30,7 +30,7 @@ public class CameraActivity extends Activity{
 	ImageButton shutterBtn;
 	ImageButton switchBtn;
 	FaceView faceView;
-	float previewRate = -1f;
+	double previewRate = -1d;
 	private MainHandler mMainHandler = null;
 	GoogleFaceDetect googleFaceDetect = null;
 	@Override
