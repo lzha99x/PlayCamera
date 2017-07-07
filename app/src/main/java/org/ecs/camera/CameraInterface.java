@@ -75,7 +75,7 @@ public class CameraInterface {
 			mParams.setPictureSize(pictureSize.width, pictureSize.height);
 			// Set previewSize
 			Size previewSize = CamParaUtil.getInstance().getOptimalPreviewSize(currentActivity,
-					mParams.getSupportedPictureSizes(),(double)previewRate);
+					mParams.getSupportedPreviewSizes(),(double)previewRate);
 			if (LOGV) Log.d(TAG, "w = " + previewSize.width+ "h = " + previewSize.height);
 
 			mParams.setPreviewSize(previewSize.width, previewSize.height);
