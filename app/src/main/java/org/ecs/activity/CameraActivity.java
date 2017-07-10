@@ -26,6 +26,7 @@ public class CameraActivity extends Activity{
 	private static final String TAG = "CameraActivity";
 	private static final int TASKS_DELAY_MSEC = 2500;
     private final boolean LOGV = true;
+    private boolean mFaceDetectionCur = false;
 	CameraSurfaceView surfaceView = null;
 	ImageButton shutterBtn;
 	ImageButton switchBtn;
@@ -139,6 +140,7 @@ public class CameraActivity extends Activity{
 	private void takePicture(){
         mMainHandler.removeMessages(EventUtil.CAMERA_HAS_STARTED_PREVIEW);
 		CameraInterface.getInstance().doTakePicture();
+        mFaceDetectionCur = false;
 		mMainHandler.sendEmptyMessageDelayed(EventUtil.CAMERA_HAS_STARTED_PREVIEW, TASKS_DELAY_MSEC);
 	}
 	private void switchCamera(){
@@ -152,8 +154,13 @@ public class CameraActivity extends Activity{
 
 	}
 	private void startGoogleFaceDetect(){
+        if (mFaceDetectionCur) {
+            if (LOGV) Log.d(TAG, "startFaceDetection: face detection already started, skip!");
+            return;
+        }
+
 		Camera.Parameters params = CameraInterface.getInstance().getCameraParams();
-        if (LOGV) Log.d(TAG, "startGoogleFaceDetect: params.getMaxNumDetectedFaces() = " + params.getMaxNumDetectedFaces());
+        if (LOGV) Log.i(TAG, "startGoogleFaceDetect: params.getMaxNumDetectedFaces() = " + params.getMaxNumDetectedFaces());
         if(params.getMaxNumDetectedFaces() > 0){
 			if(faceView != null){
 				faceView.clearFaces();
@@ -168,8 +175,13 @@ public class CameraActivity extends Activity{
             }
             //CameraInterface.getInstance().getCameraDevice().startFaceDetection();
 		}
+        mFaceDetectionCur = true;
 	}
 	private void stopGoogleFaceDetect(){
+        if (!mFaceDetectionCur) {
+            if (LOGV) Log.d(TAG, "startFaceDetection: face detection already stopped, skip!");
+            return;
+        }
         //mMainHandler.removeCallbacksAndMessages(EventUtil.CAMERA_HAS_STARTED_PREVIEW);
         mMainHandler.removeMessages(EventUtil.CAMERA_HAS_STARTED_PREVIEW);
 		Camera.Parameters params = CameraInterface.getInstance().getCameraParams();
@@ -178,6 +190,7 @@ public class CameraActivity extends Activity{
 			CameraInterface.getInstance().getCameraDevice().stopFaceDetection();
 			faceView.clearFaces();
 		}
-	}
+        mFaceDetectionCur = false;
+    }
 
 }

@@ -17,7 +17,7 @@ public class FileUtil {
 	private static final File parentPath = Environment.getExternalStorageDirectory();
 	private static   String storagePath = "";
 	private static final String DST_FOLDER_NAME = "PlayCamera";
-    private static ImageFileName sImageFileName;
+    private static ImageFileName sImageFileName = new ImageFileName("yyyyMMdd_HHmmss");
 
 	/**初始化保存路径
 	 * @return
@@ -30,7 +30,7 @@ public class FileUtil {
 				f.mkdir();
 			}
 		}
-        sImageFileName = new ImageFileName("yyyyMMdd_HHmmss");
+        //sImageFileName = new ImageFileName("yyyyMMdd_HHmmss");
 		return storagePath;
 	}
 
